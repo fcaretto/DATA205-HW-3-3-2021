@@ -1,0 +1,65 @@
+---
+title: "DATA 205 HW 3/3/21"
+output: html_document
+---
+
+```{r}
+MPDU <- read.csv('MPDU.csv')
+```
+
+```{r}
+library("tidyverse")
+```
+
+```{r}
+counts <- table(MPDU$Total.Units, MPDU$Total.MPDU)
+barplot(counts, main="Total and MPDU Units",
+  xlab="Number of Units", col=c("darkblue","red"),
+  legend = rownames(counts))
+```
+
+```{r}
+install.packages("ggplot2")
+```
+
+```{r}
+library(ggplot2)
+df <- data.frame(MPDU$Total.Units, MPDU$Planning.Area)
+plot1 <-ggplot(data=df, aes(x=MPDU$Planning.Area, y=MPDU$Total.Units)) +
+  geom_bar(stat="identity")
+plot1
+```
+
+```{r}
+install.packages("highcharter")
+install.packages("RColorBrewer")
+library("highcharter")
+library("RColorBrewer")
+plot2 <- MPDU %>% 
+ hchart(type = "column", hcaes(x = Planning.Area, y = Total.MPDU)) %>%
+ hc_title(text = "MPDU by Planning Area") %>%
+ hc_yAxis(title = list(text = "MPDU Count")) %>%
+ hc_xAxis(title = list(text = "Planning Area")) %>%
+ hc_legend(align = "right", 
+            verticalAlign = "top")
+plot2
+```
+
+```{r}
+HLR <- read.csv('HLR.csv')
+```
+
+
+```{r}
+plot3 <- HLR %>% 
+ hchart(type = "column", hcaes(x = Ownership.Type, y = Unit.Count, group = License.Type)) %>%
+ hc_title(text = "Units per Ownership Type") %>%
+ hc_yAxis(title = list(text = "Unit Count")) %>%
+ hc_xAxis(title = list(text = "Ownership Type")) %>%
+ hc_yAxis(max = 1000) %>%
+ hc_legend(align = "right", 
+            verticalAlign = "right") %>%
+  hc_add_theme(hc_theme_gridlight())
+plot3
+```
+
